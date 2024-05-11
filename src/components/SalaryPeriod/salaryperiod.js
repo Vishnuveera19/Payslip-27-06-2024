@@ -1,0 +1,108 @@
+export const inputFormElements17 = [
+    {
+        name: "CompanyId",
+        label: "CompanyId",
+        variant: "outlined",
+        fullWidth: true,
+        required: true,
+        xs: 12,
+        sm: 6,
+        
+    },
+{
+    name: "BranchId",
+    label: "BranchId", 
+    variant: "outlined", 
+    fullWidth: true,
+    required: true,
+    xs:12, 
+    sm: 6,
+},
+{
+    name: "PeriodCode",
+    label: "PeriodCode", 
+    variant: "outlined", 
+    fullWidth: true,
+    required: true,
+    xs:12, 
+    sm: 6,
+},
+
+{
+    name: "Selection",
+    label: "Selection", 
+    variant: "outlined", 
+    fullWidth: true,
+    required: true,
+    xs:12, 
+    sm: 6,
+},
+
+{
+    name: "PYear",
+    label: "PYear", 
+    variant: "outlined", 
+    fullWidth: true,
+    required: true,
+    xs:12, 
+    sm: 6,
+},
+
+{
+    name: "PMonth",
+    label: "PMonth", 
+    variant: "outlined", 
+    fullWidth: true,
+    required: true,
+    xs:12, 
+    sm: 6,
+},
+{
+    name: "FromDate",
+    label: "FromDate", 
+    variant: "outlined", 
+    fullWidth: true,
+    required: true,
+    xs:12, 
+    sm: 6,
+    type:"datetime-local"
+},
+{
+    name: "ToDate",
+    label: "ToDate", 
+    variant: "outlined", 
+    fullWidth: true,
+    required: true,
+    xs:12, 
+    sm: 6,
+    type:"datetime-local"
+},
+{
+    name: "TotalDays",
+    label: "TotalDays", 
+    variant: "outlined", 
+    fullWidth: true,
+    required: true,
+    xs:12, 
+    sm: 6,
+},
+{
+    name: "PayDate",
+    label: "PayDate", 
+    variant: "outlined", 
+    fullWidth: true,
+    required: true,
+    xs:12, 
+    sm: 6,
+    type:"datetime-local"
+},
+{
+    name: "OtInclude",
+    label: "OtInclude", 
+    variant: "outlined", 
+    fullWidth: true,
+    required: true,
+    xs:12, 
+    sm: 6,
+},
+]
