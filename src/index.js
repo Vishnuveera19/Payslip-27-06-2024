@@ -133,6 +133,7 @@ import TempshiftdetailsTables from './components/TempShiftDetails/tempshiftdetai
 import ShiftDetailsForm from './components/TempShiftDetails/tempshiftdetailsForm';
 import YearEndTable from './components/Yearend/yearendTable';
 import Sample1 from './components/Yearend/yearendform';
+import AttendanceNew from './components/Attendance - New/Attendance';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
@@ -267,6 +268,7 @@ root.render(
      <Route path='/ShiftDetailsForm' element={<ShiftDetailsForm/>}></Route> 
      <Route path='/YearEndTable' element={<YearEndTable/>}></Route>
      <Route path='/Sample1' element={<Sample1/>}></Route> 
+     <Route path='/attendance1' element={<AttendanceNew/>}></Route>
   </Route>
    </Routes> 
     </BrowserRouter>
