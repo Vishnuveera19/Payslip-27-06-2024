@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
   
 
-  export default function LeaveAppForm() {
+export default function LeaveAppForm() {
 
 const navigate = useNavigate();
 const [employee,setEmployee]=useState([])

@@ -1,7 +1,7 @@
-import {  Typography, Grid, FormControl, InputLabel, Card, CardContent, TextField, FormControlLabel, Checkbox} from '@mui/material';
+import {  Typography, Grid, FormControl, InputLabel, Card, CardContent, TextField, FormControlLabel, Checkbox, Button, } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getRequest } from '../../serverconfiguration/requestcomp';
-import { PAYMEMPLOYEE } from '../../serverconfiguration/controllers';
+import { getRequest, postRequest } from '../../serverconfiguration/requestcomp';
+import { PAYMEMPLOYEE, TIMECARD } from '../../serverconfiguration/controllers';
 import { ServerConfig } from '../../serverconfiguration/serverconfig';
 import { CenterFocusStrong } from '@mui/icons-material';
 
@@ -12,11 +12,27 @@ export default function AttendanceNew() {
       const [branch,setBranch]=useState([])
       const [employeeCode,setEmployeeCode]=useState("")
       const [employeeName,setEmployeeName]=useState("")
-      const [checkbox1, setCheckbox1] = useState(false);
-      const [checkbox2, setCheckbox2] = useState(false);
-      const [checkbox3, setCheckbox3] = useState(false);
+      const[shiftCode, setShiftCode]= useState("")
+      const[ dates, setDates]= useState("")
+      const[ days, setDays]= useState("")
+      const[ breakOut, setBreakOut]= useState("")
+      const[breakIn, setBreakIn]= useState("")
+      const[ outtime, setOutTime]= useState("")
+      const[ lateIn, setLateIn]= useState("")
+      const[lateOut, setLateOut]= useState("")
+      
+      const[status, setStatus]= useState("")
+      const[ leaveCode, setLeaveCode]= useState("")
+      const[ data, setData]= useState("")
+      const[pnEmployeeId, setPnEmployeeId]= useState("")
+      const[  flag, setFlag]= useState("")
       const [presentTimes, setPresentTimes] = useState({});
-  const [disableLeaveCheckboxes, setDisableLeaveCheckboxes] = useState({});
+      const [disableLeaveCheckboxes, setDisableLeaveCheckboxes] = useState({});
+      const [otHrsTimes, setOtHrsTimes] = useState({}); 
+      const [halfDayTimes, setHalfDayTimes] = useState({}); 
+   
+
+
 
       useEffect(() => {
         async function getData() {
@@ -33,8 +49,24 @@ export default function AttendanceNew() {
         const formData = {
           pnCompanyId: company,
           pnBranchId: branch,
-          empCode: employeeCode,
-          empName: employeeName,
+          empCode: "EMP004",
+          empName: "Shanmuga Priya",
+          shiftCode: "Shi2",
+          dates: "2024-05-13T00:00:00",
+          days: "Tuesday",
+          intime: presentTimes,
+          breakOut: "1900-01-01T12:00:00",
+          breakIn: "1900-01-01T12:30:00",
+          earlyOut:  halfDayTimes,
+          outtime: "1900-01-01T18:00:00",
+          lateIn: null,
+          lateOut: null,
+          otHrs:  otHrsTimes,
+          status:  "P",
+          leaveCode:"AL004",
+          data:"Y",
+          pnEmployeeId:  "EMP004",
+          flag: "Y"
         
         };
         console.log(formData)
@@ -45,7 +77,7 @@ export default function AttendanceNew() {
         const isChecked = e.target.checked;
         if (isChecked) {
           if (field === 'present') {
-            const currentTime = new Date().toLocaleTimeString();
+            const currentTime = new Date().toISOString();
             setPresentTimes(prevState => ({
               ...prevState,
               [employeeCode]: currentTime
@@ -70,9 +102,26 @@ export default function AttendanceNew() {
           });
         }
       };
-    
 
-  
+      const handleOtHrsTimeChange = (event, employeeCode) => {
+        const newValue = event.target.value;
+       
+        setOtHrsTimes(prevState => ({
+            ...prevState,
+            [employeeCode]: newValue
+        }));
+    };
+    
+    const handleHalfDayTimeChange = (event, employeeCode) => {
+        const newValue = event.target.value;
+       
+        setHalfDayTimes(prevState => ({
+            ...prevState,
+            [employeeCode]: newValue
+        }));
+    };
+    
+    const margin={margin:"0 5px"}
     return (
         <div>
         <Grid style ={{ padding: "80px 5px0 5px" }}>
@@ -134,7 +183,6 @@ export default function AttendanceNew() {
                                                 <th style={{ padding: '10px' }}>Leave</th>
                                                 <th style={{ padding: '10px' }}>Ot Hrs</th>
                                                 <th style={{ padding: '10px' }}>Half day</th>
-                                                <th style={{ padding: '10px' }}>Permission</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -154,6 +202,8 @@ export default function AttendanceNew() {
                                   label="Present Time"
                                   variant="outlined"
                                   size="small"
+                                  
+                                  onChange={(e) =>setPresentTimes(e.target.value)}
                                   value={presentTimes[e.employeeCode]}
                                   disabled
                                 />
@@ -161,11 +211,40 @@ export default function AttendanceNew() {
                             </td>
                                                         <td style={{ padding: '10px' }}><Checkbox
                                 disabled={disableLeaveCheckboxes[e.employeeCode]}
-                                // Add your onChange handler for Leave checkboxes here
+                               
                               /></td>
-                                                        <td style={{ padding: '10px' }}><Checkbox></Checkbox></td>
-                                                        <td style={{ padding: '10px' }}><Checkbox></Checkbox></td>
-                                                        <td style={{ padding: '10px' }}><Checkbox></Checkbox></td>
+                                                        <td style={{ padding: '10px' }}><Checkbox
+    onChange={(event) => handleCheckboxChange(event, 'otHrs', e.employeeCode)}
+/>
+
+{presentTimes[e.employeeCode] && (
+    <TextField
+        id={`otHrsTime_${e.employeeCode}`}
+        label="Ot Hrs"
+        variant="outlined"
+        size="small"
+        type='datetime-local'
+        onClick={(event) => handleOtHrsTimeChange(event, e.employeeCode) }
+        onChange={(e) =>setOtHrsTimes(e.target.value)}
+        InputLabelProps={{shrink: true}}
+    />
+)}</td>
+                                                        <td style={{ padding: '10px' }}><Checkbox
+    onChange={(event) => handleCheckboxChange(event, 'halfDay', e.employeeCode)}
+/>
+
+{presentTimes[e.employeeCode] && (
+    <TextField
+        id={`halfDayTimes_${e.employeeCode}`}
+        label="Half Day "
+        variant="outlined"
+        size="small"
+        type='datetime-local'
+        onClick={(event) => handleHalfDayTimeChange(event, e.employeeCode)}
+        onChange={(e) =>setHalfDayTimes(e.target.value)}
+        InputLabelProps={{shrink: true}}
+    />
+)}</td>
                                                     </tr>
                                                 );
                                             })}
@@ -173,6 +252,43 @@ export default function AttendanceNew() {
                                     </table>
                                 </Grid>
 
+  
+                                <Grid container spacing={1} paddingTop={'10px'}>
+                                <Grid item xs ={12} align="right" >
+                                <Button style={margin} type="reset" variant='outlined' color='primary' >RESET</Button>
+              <Button onClick={()=>{
+const formData = {
+          pnCompanyId: company,
+          pnBranchId: branch,
+          empCode: "EMP004",
+          empName: "Shanmuga Priya",
+          shiftCode: "Shi2",
+          dates: "2024-05-13T00:00:00",
+          days: "Tuesday",
+          intime: presentTimes,
+          breakOut: "1900-01-01T12:00:00",
+          breakIn: "1900-01-01T12:30:00",
+          earlyOut:  halfDayTimes,
+          outtime: "1900-01-01T18:00:00",
+          lateIn: null,
+          lateOut: null,
+          otHrs:  otHrsTimes,
+          status:  "P",
+          leaveCode:"AL004",
+          data:"Y",
+          pnEmployeeId:  "EMP004",
+          flag: "Y"
+};
+console.log(formData)
+postRequest(ServerConfig.url,TIMECARD,formData).then((e)=>{
+console.log(e)
+}).catch((e)=>console.log(e));
+
+                
+              }}  
+      variant='contained' color='primary' >SAVE</Button>
+                                  </Grid>
+                                  </Grid>
         
                   
 

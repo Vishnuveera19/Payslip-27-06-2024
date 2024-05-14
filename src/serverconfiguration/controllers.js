@@ -63,4 +63,5 @@ export const SHIFTDETAILS="ShiftDetails"
 export const SHIFTMONTH="ShiftMonths"
 export const SHIFTPATTERN="ShiftPatterns"
 export const YEAREND="Yearends"
+export const TIMECARD = "Timecards"
 
