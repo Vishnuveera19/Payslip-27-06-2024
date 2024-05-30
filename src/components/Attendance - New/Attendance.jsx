@@ -238,8 +238,7 @@ export default function AttendanceNew() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                          
-                                         
+                        
                                             {
                                           
                                             shiftmonth.filter((r)=>r.pnBranchId==branch && r.shiftCode==shiftCode).map((e,index)=>{

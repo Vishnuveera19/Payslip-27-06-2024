@@ -7,3 +7,7 @@ export async function postRequest(url,controller,data)
  { 
   return await axios.post(url+controller,data)
  }
+ export async function putRequest(url,controller ,data) 
+ {
+   return await axios.put(url+controller,data)
+ }
