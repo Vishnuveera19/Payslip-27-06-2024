@@ -136,6 +136,7 @@ import Sample1 from './components/Yearend/yearendform';
 import AttendanceNew from './components/Attendance - New/Attendance';
 import OtHrsNewForm from './components/OtHrsNew/OtHrsNewForm';
 import Leaveapprovenew from './components/Leave Apply New/Leave Approve New';
+import EarlyAndLate from './components/Early and Late entries/Earlyandlateentriesform';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
@@ -273,6 +274,7 @@ root.render(
      <Route path='/attendance1' element={<AttendanceNew/>}></Route>
      <Route path='/Othrsnew' element={<OtHrsNewForm/>}></Route>
      <Route path='/leaveapprovenew' element={<Leaveapprovenew/>}></Route>
+     <Route path='/earlyandlatentries' element={<EarlyAndLate/>}></Route>
   </Route>
    </Routes> 
     </BrowserRouter>

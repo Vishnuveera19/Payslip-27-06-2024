@@ -26,6 +26,8 @@ export default function Leaveapprovenew() {
         getData();
     },[]);
 
+    const currentDate = new Date();
+
     const handleApprove = async (employeeCode) => {
         const employeeTimecards = timecard.filter((tc) => tc.empCode === employeeCode);
         const alreadyPresent = employeeTimecards.some((tc) => tc.status === 'P' || tc.status === 'L');
@@ -54,6 +56,7 @@ export default function Leaveapprovenew() {
                     postRequest(ServerConfig.url, TIMECARD, {
                         empCode: employeeCode,
                         status: 'L',
+                        dates : currentDate.toISOString().split('T')[0] + emp[0].start_time.substring(10, 19),
                         pnCompanyid: emp[0].pn_companyid,
                         pnBranchid: emp[0].pn_branchid,
                         shiftCode: emp[0].shift_code,
@@ -202,7 +205,7 @@ export default function Leaveapprovenew() {
                                 <Grid container spacing={1} paddingTop={'10px'}>
                   <Grid item xs={12} align="right">
                     <Button style={margin} type="button" variant='outlined' color='primary' onClick={() => window.location.reload()}>RESET</Button>
-                    <Button  variant='contained' color='primary'>SAVE</Button>
+                    
                   </Grid>
                   </Grid>
 
