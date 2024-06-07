@@ -137,6 +137,11 @@ import AttendanceNew from './components/Attendance - New/Attendance';
 import OtHrsNewForm from './components/OtHrsNew/OtHrsNewForm';
 import Leaveapprovenew from './components/Leave Apply New/Leave Approve New';
 import EarlyAndLate from './components/Early and Late entries/Earlyandlateentriesform';
+import PayslipNewFormat from './components/PayslipNew format/PayslipNewFormat';
+import AllJVReport from './components/AllJVReport/AllJVReport';
+import PayslipGenerator from './components/PayslipNew format/payslipgenerator';
+import PayslipG from './components/PayslipFN/payslipG';
+import PayslipNF from './components/PayslipFN/PayslipNF';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
@@ -275,6 +280,12 @@ root.render(
      <Route path='/Othrsnew' element={<OtHrsNewForm/>}></Route>
      <Route path='/leaveapprovenew' element={<Leaveapprovenew/>}></Route>
      <Route path='/earlyandlatentries' element={<EarlyAndLate/>}></Route>
+     <Route path='/payslipgenerator/payslipnewformat' element={<PayslipNewFormat/>}></Route>
+     <Route path='/alljvreport' element={<AllJVReport/>}></Route>
+     <Route path='/payslipgenerator' element={<PayslipGenerator/>}></Route>
+     <Route path='payslipg' element={<PayslipG/>}></Route>
+     <Route path='payslipnf' element={<PayslipNF/>}></Route>
+    
   </Route>
    </Routes> 
     </BrowserRouter>

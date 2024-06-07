@@ -1,7 +1,7 @@
 import { Typography, Grid, FormControl, InputLabel, Card, CardContent, Checkbox, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { getRequest, postRequest } from '../../serverconfiguration/requestcomp';
-import { PAYMEMPLOYEE, TIMECARD, UPDATEDTIMECARD, SHIFTMONTH } from '../../serverconfiguration/controllers';
+import { PAYMEMPLOYEE, TIMECARD, UPDATEDTIMECARD, SHIFTMONTH, REPORT } from '../../serverconfiguration/controllers';
 import { ServerConfig } from '../../serverconfiguration/serverconfig';
 import React from 'react';
 
@@ -13,8 +13,10 @@ function cleararray(arr)
      }
 }
 function getMatchingRecords(array1, array2) {
+   console.log(array1)
+   console.log(array2)
   return array2.filter(obj1 => {
-      return array1.some(obj2 => obj1.employeecode === obj2.pnEmployeeCode);
+      return array1.some(obj2 => obj1.employeecode == obj2.pnEmployeeCode);
   });
 }
 
@@ -35,8 +37,11 @@ export default function AttendanceNew() {
       const shiftmonth = await getRequest(ServerConfig.url, SHIFTMONTH);
       setShiftMonth(shiftmonth.data);
       return timecard.data
-      
-      
+      const currentdata=await postRequest(ServerConfig.url,REPORT,{
+        query:"select emp_code from time_card where Day(dates)=day(GetDate()) and month(dates)=month(getdate()) and year(dates)=year(getdate())"
+      })
+      console.log(currentdata.data)
+    
     }
     getData().then((e)=>{
       setUpdatedTimeCard(e)
@@ -47,6 +52,7 @@ export default function AttendanceNew() {
 
   const handleSave = () => {
  const resultarr=getMatchingRecords(att,updatedTimeCard)
+console.log("matching "+resultarr)
  resultarr.map((e)=>{
   e.status="P"
   const currentDate = new Date();
@@ -74,7 +80,93 @@ export default function AttendanceNew() {
   postRequest(ServerConfig.url,TIMECARD,e).then((e)=>console.log(e))
  })
  console.log(resultarr)   
+    // att.map((e)=>{
     
+    //   e.status="P"
+    //   e.breakOut = "2024-05-09T12:00:00"
+    //   e.breakIn= "2024-05-09T12:30:00"
+    //   e.earlyOut= "1900-01-01T17:00:00"
+    //   e.lateIn= "2024-05-15T00:00:00"
+    //   e.lateOut= "2024-05-20T00:00:00"
+    //   e.otHrs= "1900-01-01T02:00:00"
+    //   e.leaveCode= "AL"
+    //   e.data= "Y"
+    //   e.pnEmployeeId= "EMP005"
+    //   e.flag= "Z"
+    // })
+    // console.log(att)
+    // console.log(updatedTimeCard)
+  //   console.log(updatedTimeCard)
+  //   const currentDateTime = new Date().toISOString();
+  //   console.log("Current Date Time:", currentDateTime);
+  //   console.log(employee)
+  //   console.log(branch)
+  //   const filteredEmployees = employee.filter((r) => r.pnBranchId == branch);
+  //   console.log(updatedTimeCard)
+  //  console.log(filteredEmployees)
+  //    filteredEmployees.forEach((e) => {
+  //      console.log(`Employee Code: ${e.employeeCode}, Current Date Time: ${currentDateTime}`);
+  //    });
+
+  //    const formdata = updatedTimeCard.map((e) => {
+  //     return {
+  //       pnCompanyid: e.pn_companyid,
+  //       pnBranchid: e.pn_branchid,
+  //       empCode: e.employeecode,
+  //       empName: e.employee_full_name,
+  //       shiftCode: e.shift_code,
+  //       dates: e.currentDate,
+  //       days: e.currentDay,
+  //       intime: e.start_time,
+  //       breakOut: "2024-05-09T12:00:00",
+  //       breakIn: "2024-05-09T12:30:00",
+  //       earlyOut: "1900-01-01T17:00:00",
+  //       outtime: e.end_time,
+  //       lateIn: "2024-05-15T00:00:00",
+  //       lateOut: "2024-05-20T00:00:00",
+  //       otHrs: "1900-01-01T02:00:00",
+  //       status: "P",
+  //       leaveCode: "AL",
+  //       data: "Y",
+  //       pnEmployeeId: "EMP005",
+  //       flag: "Z"
+  //     };
+  //   });
+   // console.log(formdata);
+    // formdata.forEach((e) => {
+    //     postRequest(ServerConfig.url, TIMECARD, e).then((response) => {
+    //        console.log(response);
+    //     }).catch((error) => console.log(error));
+    //    });
+    // const formData = insertTimeCard.map(e => ({
+    //   pnCompanyId: company,
+    //   pnBranchId: branch,
+    //   empCode: e.employeeCode, 
+    //   empName: e.employeeFullName,
+    //   shiftCode: e.shift_code,
+    //   dates: e.dates,
+    //   days: e.days,
+    //   intime: e.intime,
+    //   breakOut: e.break_out,
+    //   breakIn: e.break_in,
+    //   earlyOut: e.early_out,
+    //   outtime: e.outtime,
+    //   lateIn: e.Late_in,
+    //   lateOut: e.Late_out, 
+    //   otHrs: e.ot_hrs,
+    //   status: e.status,
+    //   leaveCode: e.leave_code,
+    //   data: e.data,
+    //   pnEmployeeId: e.pn_EmployeeID, 
+    //   flag: e.flag
+    // }));
+
+    // console.log(formData);
+    // formData.forEach((e) => {
+    //   postRequest(ServerConfig.url, TIMECARD, e).then((response) => {
+    //     console.log(response);
+    //   }).catch((error) => console.log(error));
+    // });
   };
 
   const margin = { margin: "0 5px" };
@@ -154,10 +246,12 @@ export default function AttendanceNew() {
                                         <tbody>
                         
                                             {
-                                          
+                                              
                                             shiftmonth.filter((r)=>r.pnBranchId==branch && r.shiftCode==shiftCode).map((e,index)=>{
+                                             
+                                              
                                                att.push(e)
-                                               console.log(att)
+                                            
                                                 return (
                                                     <tr key={e.pnEmployeeCode}>
                                                         <td style={{textAlign:'left'}}>{e.pnEmployeeCode}</td>
