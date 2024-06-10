@@ -14,7 +14,7 @@ import { Grid,Card,
   import { useNavigate } from 'react-router-dom';
   
   
-  export default function PayslipGenerator() {
+  export default function OldPayslipGenerator() {
   
   const[paympaybills , setPaymPayBills] = useState([])
   const[pnEmployeeId, setPnEmployeeId] = useState("")
@@ -36,7 +36,7 @@ import { Grid,Card,
   }, []);
 
   const handlesave = () => {
-    navigate('payslipnewformat',
+    navigate('oldpayslip',
       {
         state: {
           pnEmployeeId,
@@ -54,7 +54,7 @@ import { Grid,Card,
         <Grid style ={{ padding: "80px 5px0 5px" }}>
         <Card style = {{maxWidth: 600, margin: "0 auto"}}>
         <CardContent>
-        <Typography variant='h5' color='S- Light' align='center'>Generate New Payslip</Typography>
+        <Typography variant='h5' color='S- Light' align='center'>Generate Old Payslip</Typography>
         <form>
        
         <Grid container spacing={2} inputlabelprops={{shrink:true}}>

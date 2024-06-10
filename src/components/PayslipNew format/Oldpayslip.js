@@ -7,7 +7,7 @@ import { ServerConfig } from '../../serverconfiguration/serverconfig';
 import { getRequest, postRequest } from '../../serverconfiguration/requestcomp';
 import { useLocation } from 'react-router-dom';
 
-const PayslipNewFormat = () => {
+const OldPayslip = () => {
 
     const[data, setdata] = useState([]);
     const[employee, setEmployee] =useState([]);
@@ -227,4 +227,4 @@ const employeewtable = employeework.find(emp => emp.pnEmployeeId == empId)
   );
 };
 
-export default PayslipNewFormat;
+export default OldPayslip;

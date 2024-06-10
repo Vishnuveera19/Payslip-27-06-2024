@@ -142,6 +142,8 @@ import AllJVReport from './components/AllJVReport/AllJVReport';
 import PayslipGenerator from './components/PayslipNew format/payslipgenerator';
 import PayslipG from './components/PayslipFN/payslipG';
 import PayslipNF from './components/PayslipFN/PayslipNF';
+import OldPayslipGenerator from './components/PayslipNew format/OldPayslipGenerator';
+import OldPayslip from './components/PayslipNew format/Oldpayslip';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
@@ -283,8 +285,9 @@ root.render(
      <Route path='/payslipgenerator/payslipnewformat' element={<PayslipNewFormat/>}></Route>
      <Route path='/alljvreport' element={<AllJVReport/>}></Route>
      <Route path='/payslipgenerator' element={<PayslipGenerator/>}></Route>
-     <Route path='payslipg' element={<PayslipG/>}></Route>
-     <Route path='payslipnf' element={<PayslipNF/>}></Route>
+     <Route path='/oldpayslipgenerator/oldpayslip' element = {<OldPayslip/>}></Route>
+     <Route path='/oldpayslipgenerator' element = {<OldPayslipGenerator/>}></Route>
+
     
   </Route>
    </Routes> 
