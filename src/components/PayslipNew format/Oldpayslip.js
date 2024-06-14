@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import { ServerConfig } from '../../serverconfiguration/serverconfig';
 import { getRequest, postRequest } from '../../serverconfiguration/requestcomp';
 import { useLocation } from 'react-router-dom';
+import generatePDF from 'react-to-pdf';
+import { useRef } from 'react';
 
 const OldPayslip = () => {
 
@@ -14,11 +16,24 @@ const OldPayslip = () => {
     const[employeeprofile, setemployeeprofile] = useState([])
     const[totalsalary, setTotalSalary] = useState([{}])
     const[employeework, setemployeework] = useState([])
+
+    const targetRef = useRef()
+
+    function getMonthName(monthNumber) {
+      const monthNames = [
+          "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+          "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+      ];
+      return monthNames[monthNumber - 1];
+  }
+  
     
 
     const location = useLocation()
 
 const {pnEmployeeId, employeeCode, dDate, month, year} = location.state || {}
+
+console.log(getMonthName(month)); 
 
     useEffect(() => {
 async function getData() {
@@ -39,36 +54,6 @@ console.log(totalsalary)
 getData();
 }, [pnEmployeeId, employeeCode, month, year, dDate]);
 
-const handlesave = async () => {
-  
-  const checkQuery = `SELECT COUNT(*) as count FROM [dbo].[Final_Salary] WHERE [pn_CompanyID] = ${paympaybill.pnCompanyId} AND [pn_BranchID] = ${paympaybill.pnBranchId} AND [pn_EmployeeID] = ${pnEmployeeId} AND [Month] = '${month}' AND [Year] = '${year}'`;
-
-  try {
-  
-     const checkResponse = await postRequest(ServerConfig.url, REPORT, {
-        "query": checkQuery
-     });
-
-     const exists = checkResponse.data[0].count > 0;
-
-     if (exists) {
-        
-        alert('Payslip already Generated.');
-     } else {
-        
-        const insertQuery = `INSERT INTO [dbo].[Final_Salary]([pn_CompanyID],[pn_BranchID],[pn_EmployeeID],[EmployeeCode],[Employee_First_Name],[DesignationName],[DepartmentName],[GradeName],[CategoryName],[JoiningDate],[d_date],[Month],[Year],[Earn_Amount],[Ded_Amount],[NetPay],[Earned_Basic],[Gross_salary],[Net_salary],[EPF],[FPF],[period_code],[max_amount],[Act_Basic],[Calc_Days],[Paid_Days],[Present_Days],[Absent_Days],[WeekOffDays],[Holidays],[TotLeave_Days],[ot_hrs],[ot_value],[ot_amt],[Allowance1],[value1],[Allowance2],[value2],[Allowance3],[value3],[Allowance4],[value4],[Allowance5],[value5],[Allowance6],[value6],[Allowance7],[value7],[Allowance8],[value8],[Allowance9],[value9],[Allowance10],[value10],[Deduction1],[valueA1],[Deduction2],[valueA2],[Deduction3],[valueA3],[Deduction4],[valueA4],[Deduction5],[valueA5],[Deduction6],[valueA6],[Deduction7],[valueA7],[Deduction8],[valueA8],[Deduction9],[valueA9],[Deduction10],[valueA10],[CompanyName],[Address_line1],[Address_Line2],[City],[Zipcode]) VALUES(${paympaybill.pnCompanyId},${paympaybill.pnBranchId},${pnEmployeeId},'${employeeCode}','${paympaybill.employeeFirstName}','${paympaybill.designationName}','${paympaybill.departmentName}','${paympaybill.gradeName}','${paympaybill.categoryName}','${paympaybill.joiningDate}','${paympaybill.dDate}','${month}','${year}',${paympaybill.earnAmount},${paympaybill.dedAmount},${totalsalary[0].MonthlySalary},${paympaybill.earnedBasic},${paympaybill.grossSalary},${paympaybill.netSalary},${paympaybill.epf},${paympaybill.fpf},'${paympaybill.periodCode}',${paympaybill.maxAmount},${paympaybill.actBasic},${paympaybill.calcDays},${paympaybill.paidDays},${paympaybill.presentDays},${paympaybill.absentDays},${paympaybill.weekOffDays},${paympaybill.holidays},${paympaybill.totLeaveDays},'${paympaybill.otHrs}',${paympaybill.otValue},${paympaybill.otAmt},'${paympaybill.allowance1}',${paympaybill.value1},'${paympaybill.allowance2}',${paympaybill.value2},'${paympaybill.allowance3}',${paympaybill.value3},'${paympaybill.allowance4}',${paympaybill.value4},'${paympaybill.allowance5}',${paympaybill.value5},'${paympaybill.allowance6}',${paympaybill.value6},'${paympaybill.allowance7}',${paympaybill.value7},'${paympaybill.allowance8}',${paympaybill.value8},'${paympaybill.allowance9}',${paympaybill.value9},'${paympaybill.allowance10}',${paympaybill.value10},'${paympaybill.deduction1}',${paympaybill.valueA1},'${paympaybill.deduction2}',${paympaybill.valueA2},'${paympaybill.deduction3}',${paympaybill.valueA3},'${paympaybill.deduction4}',${paympaybill.valueA4},'${paympaybill.deduction5}',${paympaybill.valueA5},'${paympaybill.deduction6}',${paympaybill.valueA6},'${paympaybill.deduction7}',${paympaybill.valueA7},'${paympaybill.deduction8}',${paympaybill.valueA8},'${paympaybill.deduction9}',${paympaybill.valueA9},'${paympaybill.deduction10}',${paympaybill.valueA10},'${paympaybill.companyName}','${paympaybill.addressLine1}','${paympaybill.addressLine2}','${paympaybill.city}',${paympaybill.zipcode})`;
-
-        await postRequest(ServerConfig.url, REPORT, {
-           "query": insertQuery
-        });
-
-        alert('Record inserted successfully.');
-     }
-  } catch (error) {
-     console.error('Error performing database operation:', error);
-     alert('An error occurred while saving the record.');
-  }
-};
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -90,15 +75,17 @@ const employeewtable = employeework.find(emp => emp.pnEmployeeId == empId)
 
 
   return (
+    <>
+    <div ref={targetRef}>
     <Paper style={{ padding: '20px', margin: '20px', border: '2px solid black' }}>
       <Typography variant="h4" align="center">
-        HESPERUS AUTOMATION
+      {paympaybill ? paympaybill.companyName : 'No Name Available'}
       </Typography>
       <Typography variant="subtitle1" align="center">
-        16/1, Butt Road, Guindy, Chennai - 600 032
+      {paympaybill ? paympaybill.addressLine1 : 'No Name Available'},  {paympaybill ? paympaybill.addressLine2 : 'No Name Available'},  {paympaybill ? paympaybill.city : 'No Name Available'}, {paympaybill ? paympaybill.zipcode : 'No Name Available'}
       </Typography>
       <Typography variant="h6" align="center">
-        SERVICE CARD CUM PAYSLIP FOR THE MONTH OF FEBRUARY 2010
+        SERVICE CARD CUM PAYSLIP FOR THE MONTH OF {getMonthName(month)} {year}
       </Typography>
       <Box display="grid" gridTemplateColumns="1fr auto 1fr" alignItems="center">
       <Box gridColumn="2">
@@ -213,7 +200,7 @@ const employeewtable = employeework.find(emp => emp.pnEmployeeId == empId)
       </TableContainer>
       <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center" marginTop={'20px'}>
   <Grid item xs={4} container direction="column" alignItems="left">
-    <Typography align='left' style={{ fontSize: '18px' }}>Pay Date : 11/03/2010</Typography>
+    <Typography align='left' style={{ fontSize: '18px' }}>Pay Date : </Typography>
   </Grid>
   <Grid item xs={4} container direction="column" alignItems="center">
     <Typography align='left' style={{ fontSize: '18px' }}>Employer Signature</Typography>
@@ -222,8 +209,17 @@ const employeewtable = employeework.find(emp => emp.pnEmployeeId == empId)
     <Typography align='right' style={{ fontSize: '18px' }}>Employee Signature</Typography>
   </Grid>
       </Grid>
-      <Button variant='contained' color='primary' onClick={handlesave} style={{marginTop: '20px', marginLeft:'1500px'}} >SAVE</Button>
-    </Paper>
+          </Paper>
+          </div>
+          <Box display="flex" justifyContent="flex-start" alignItems="center" mt={2}>
+      <Button 
+        variant='contained' 
+        onClick={() => generatePDF(targetRef, { filename: 'Payslip.pdf' })} style={{marginLeft: '500px'}}
+      >
+        Download Pdf
+      </Button>
+    </Box>
+          </>
   );
 };
 

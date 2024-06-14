@@ -66,4 +66,5 @@ export const YEAREND="Yearends"
 export const TIMECARD = "Timecards"
 export const UPDATEDTIMECARD = "UpdatedTimecard/UpdatedTimecard"
 export const REPORT="Reports"
+export const SAVEBLOB = "SaveBlob"
 

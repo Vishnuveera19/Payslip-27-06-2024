@@ -1,19 +1,33 @@
 
 import React from 'react';
 import { Grid, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box, Divider, Button } from '@mui/material';
-import { TIMECARD, SHIFTMONTH, PAYMPAYBILL, PAYMEMPLOYEE, PAYMEMPLOYEEPROFILE1, REPORT, PAYMEMPLOYEEWORKDETAILS} from '../../serverconfiguration/controllers';
+import {  PAYMPAYBILL, PAYMEMPLOYEE, PAYMEMPLOYEEPROFILE1, REPORT, PAYMEMPLOYEEWORKDETAILS} from '../../serverconfiguration/controllers';
 import { useState, useEffect } from 'react';
 import { ServerConfig } from '../../serverconfiguration/serverconfig';
 import { getRequest, postRequest } from '../../serverconfiguration/requestcomp';
 import { useLocation } from 'react-router-dom';
+import generatePDF from 'react-to-pdf';
+import { useRef } from 'react';
 
 const PayslipNewFormat = () => {
+
+  const targetRef = useRef()
 
     const[data, setdata] = useState([]);
     const[employee, setEmployee] =useState([]);
     const[employeeprofile, setemployeeprofile] = useState([])
     const[totalsalary, setTotalSalary] = useState([{}])
     const[employeework, setemployeework] = useState([])
+
+
+
+    function getMonthName(monthNumber) {
+      const monthNames = [
+          "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+          "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+      ];
+      return monthNames[monthNumber - 1];
+  }
     
 
     const location = useLocation()
@@ -90,15 +104,17 @@ const employeewtable = employeework.find(emp => emp.pnEmployeeId == empId)
 
 
   return (
+    <>
+    <div ref={targetRef}>
     <Paper style={{ padding: '20px', margin: '20px', border: '2px solid black' }}>
       <Typography variant="h4" align="center">
-        HESPERUS AUTOMATION
+      {paympaybill ? paympaybill.companyName : 'No Name Available'}
       </Typography>
       <Typography variant="subtitle1" align="center">
-        16/1, Butt Road, Guindy, Chennai - 600 032
+      {paympaybill ? paympaybill.addressLine1 : 'No Name Available'},  {paympaybill ? paympaybill.addressLine2 : 'No Name Available'},  {paympaybill ? paympaybill.city : 'No Name Available'}, {paympaybill ? paympaybill.zipcode : 'No Name Available'}
       </Typography>
       <Typography variant="h6" align="center">
-        SERVICE CARD CUM PAYSLIP FOR THE MONTH OF FEBRUARY 2010
+        SERVICE CARD CUM PAYSLIP FOR THE MONTH OF {getMonthName(month)} {year}
       </Typography>
       <Box display="grid" gridTemplateColumns="1fr auto 1fr" alignItems="center">
       <Box gridColumn="2">
@@ -222,8 +238,26 @@ const employeewtable = employeework.find(emp => emp.pnEmployeeId == empId)
     <Typography align='right' style={{ fontSize: '18px' }}>Employee Signature</Typography>
   </Grid>
       </Grid>
-      <Button variant='contained' color='primary' onClick={handlesave} style={{marginTop: '20px', marginLeft:'1500px'}} >SAVE</Button>
+      
     </Paper>
+    </div>
+    <Box display="flex" justifyContent="flex-start" alignItems="center" mt={2}>
+      <Button 
+        variant='contained' 
+        color='primary' 
+        onClick={handlesave} 
+        style={{ marginRight: '680px', marginLeft:'10px' }}
+      >
+        Save
+      </Button>
+      <Button 
+        variant='contained' 
+        onClick={() => generatePDF(targetRef, { filename: 'Payslip.pdf' })} 
+      >
+        Download Pdf
+      </Button>
+    </Box>
+    </>
   );
 };
 

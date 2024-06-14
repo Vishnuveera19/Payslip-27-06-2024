@@ -144,6 +144,10 @@ import PayslipG from './components/PayslipFN/payslipG';
 import PayslipNF from './components/PayslipFN/PayslipNF';
 import OldPayslipGenerator from './components/PayslipNew format/OldPayslipGenerator';
 import OldPayslip from './components/PayslipNew format/Oldpayslip';
+import Medical from './components/Medical/Medical';
+import MedicalSlipGenerator from './components/Medical/MedicalSlipGenerator';
+import MedicalSlipView from './components/Medical/MedicalSlipView';
+import ViewMedical from './components/Medical/ViewMedical';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
@@ -287,8 +291,10 @@ root.render(
      <Route path='/payslipgenerator' element={<PayslipGenerator/>}></Route>
      <Route path='/oldpayslipgenerator/oldpayslip' element = {<OldPayslip/>}></Route>
      <Route path='/oldpayslipgenerator' element = {<OldPayslipGenerator/>}></Route>
-
-    
+     <Route path='/medicalslipgenerator/medical' element={<Medical/>}></Route>
+     <Route path='/medicalslipgenerator' element={<MedicalSlipGenerator/>}></Route>
+     <Route path='/viewmedical/medicalslipview' element={<MedicalSlipView/>}></Route>
+     <Route path='/viewmedical' element={<ViewMedical/>}></Route>
   </Route>
    </Routes> 
     </BrowserRouter>
