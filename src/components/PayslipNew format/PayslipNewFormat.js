@@ -20,6 +20,13 @@ const PayslipNewFormat = () => {
     const[employeework, setemployeework] = useState([])
 
 
+    const roundUpValue = (value, decimals = 2) => {
+      const multiplier = Math.pow(10, decimals);
+      return Math.ceil(value * multiplier) / multiplier;
+    };
+    
+    const today = new Date().toLocaleDateString();
+
 
     function getMonthName(monthNumber) {
       const monthNames = [
@@ -45,7 +52,7 @@ async function getData() {
   const employeework = await getRequest(ServerConfig.url, PAYMEMPLOYEEWORKDETAILS);
   setemployeework(employeework.data)
   const totalsalary =  await postRequest(ServerConfig.url, REPORT, {
-    "query": `EXEC FinalSalaryCalculation1 @EmployeeCode = '${employeeCode}', @Month = ${month}, @Year = ${year}, @D_dates = '${dDate}'`});
+    "query": `EXEC FinalSalaryCalculation2 @EmployeeCode = '${employeeCode}', @Month = ${month}, @Year = ${year}, @D_dates = '${dDate}'`});
   setTotalSalary(totalsalary.data)
 } 
 console.log(totalsalary)
@@ -91,6 +98,8 @@ const formatDate = (dateString) => {
   const year = date.getFullYear();
   return `${day}-${month}-${year}`;
 };
+
+
 
 
 const employeeCode1 = employeeCode; 
@@ -190,29 +199,24 @@ const employeewtable = employeework.find(emp => emp.pnEmployeeId == empId)
           <TableBody style={{ border: '3px solid black'}}>
           <TableRow>
   <TableCell style={{ border: '3px solid black' }}>
-    <Typography style={{ fontSize: '18px' }}>BASIC PAY: {paympaybill ? paympaybill.actBasic : 'No Name Available'}</Typography>
-    <Typography style={{ fontSize: '18px' }}>HRA: {paympaybill ? paympaybill.value1 : 'No Name Available'}</Typography>
-    <Typography style={{ fontSize: '18px' }}>OTHER ALLOWANCE: {paympaybill ? paympaybill.value2 + paympaybill.value3 + paympaybill.value4 + paympaybill.value5 + paympaybill.value6 + paympaybill.value7 + paympaybill.value8 : 'No Name Available'}</Typography>
-    <Typography style={{ fontSize: '18px' }}>VDA: {paympaybill ? paympaybill.value9 : 'No Name Available'} </Typography>
-    <Typography style={{ fontSize: '18px' }}>ASS: {paympaybill ? paympaybill.value10 : 'No Name Available'}</Typography>
-    <Typography style={{ marginTop: '50px', fontSize: '18px' }}>Actual Salary: {paympaybill ? paympaybill.actBasic + paympaybill.value1 + paympaybill.value2 + paympaybill.value3 + paympaybill.value4 + paympaybill.value5 + paympaybill.value6 + paympaybill.value7 + paympaybill.value8 + paympaybill.value9 + paympaybill.value10 : 'No Name Available'}</Typography>
+    <Typography style={{ fontSize: '18px' }}>BASIC PAY: {paympaybill ? roundUpValue (paympaybill.actBasic) : 'No Name Available'}</Typography>
+    <Typography style={{ fontSize: '18px' }}>HRA: {paympaybill ? roundUpValue((paympaybill.actBasic) *  (paympaybill.value1 / 100)) : 'No Name Available'}</Typography>
+    <Typography style={{ fontSize: '18px' }}>OTHER ALLOWANCE: {paympaybill ? roundUpValue(paympaybill.value2 + paympaybill.value3 + paympaybill.value4 + paympaybill.value5 + paympaybill.value6 + paympaybill.value7 + paympaybill.value8 + paympaybill.value9 + paympaybill.value10) : 'No Name Available'}</Typography>
+    <Typography style={{ marginTop: '50px', fontSize: '18px' }}>Actual Salary: {paympaybill ? roundUpValue((paympaybill.actBasic) + (paympaybill.actBasic) *  (paympaybill.value1 / 100) + paympaybill.value2 + paympaybill.value3 + paympaybill.value4 + paympaybill.value5 + paympaybill.value6 + paympaybill.value7 + paympaybill.value8 + paympaybill.value9 + paympaybill.value10) : 'No Name Available'}</Typography>
     
   </TableCell>
               <TableCell style={{ border: '3px solid black'}}>
-                <Typography style={{ fontSize: '18px' }}>EARNED BASIC: {paympaybill ? paympaybill.earnedBasic : 'No Name Available'}</Typography>
-                <Typography style={{ fontSize: '18px' }}>HRA: {paympaybill ? paympaybill.value1 : 'No Name Available'}</Typography>
-                <Typography style={{ fontSize: '18px' }}>OTHER ALLOWANCE: {paympaybill ? paympaybill.value2 + paympaybill.value3 + paympaybill.value4 + paympaybill.value5 + paympaybill.value6 + paympaybill.value7 + paympaybill.value8 : 'No Name Available'}</Typography>
-                <Typography style={{ fontSize: '18px' }}>VDA {paympaybill ? paympaybill.value9 : 'No Name Available'}</Typography>
-                <Typography style={{ fontSize: '18px' }}>ASS {paympaybill ? paympaybill.value10 : 'No Name Available'}</Typography>
-                <Typography style={{ marginTop: '50px', fontSize: '18px'}}>Total Earnings: {paympaybill ? paympaybill.earnedBasic + paympaybill.value1 + paympaybill.value2 + paympaybill.value3 + paympaybill.value4 + paympaybill.value5 + paympaybill.value6 + paympaybill.value7 + paympaybill.value8 + paympaybill.value9 + paympaybill.value10 : 'No Name Available'} </Typography>
+                <Typography style={{ fontSize: '18px' }}>EARNED BASIC: {paympaybill ? roundUpValue(paympaybill.earnedBasic) : 'No Name Available'}</Typography>
+                <Typography style={{ fontSize: '18px' }}>HRA: {paympaybill ? roundUpValue((paympaybill.actBasic) *  (paympaybill.value1 / 100)) : 'No Name Available'}</Typography>
+                <Typography style={{ fontSize: '18px' }}>OTHER ALLOWANCE: {paympaybill ? roundUpValue(paympaybill.value2 + paympaybill.value3 + paympaybill.value4 + paympaybill.value5 + paympaybill.value6 + paympaybill.value7 + paympaybill.value8 + paympaybill.value9 + paympaybill.value10) : 'No Name Available'}</Typography>
+                <Typography style={{ marginTop: '50px', fontSize: '18px'}}>Total Earnings: {paympaybill ? roundUpValue(paympaybill.earnedBasic + (paympaybill.actBasic) *  (paympaybill.value1 / 100) + paympaybill.value2 + paympaybill.value3 + paympaybill.value4 + paympaybill.value5 + paympaybill.value6 + paympaybill.value7 + paympaybill.value8 + paympaybill.value9 + paympaybill.value10) : 'No Name Available'} </Typography>
                
               </TableCell>
               <TableCell >
-                <Typography style={{ fontSize: '18px' }}>PF: {paympaybill ? paympaybill.epf : 'No Name Available'}</Typography>
-                <Typography style={{ fontSize: '18px' }}>ESI: {paympaybill ? paympaybill.valueA2 : 'No Name Available'}</Typography>
-                <Typography style={{ fontSize: '18px' }}>Loan: {paympaybill ? paympaybill.valueA3 : 'No Name Available'}</Typography>
-                <Typography style={{ fontSize: '18px' }}>Others: {paympaybill ? paympaybill.valueA4 : 'No Name Available'}</Typography>
-               <Typography style={{ marginTop: '50px', fontSize: '18px' }}>Total Deductions: {paympaybill ? paympaybill.epf + paympaybill.valueA1 + paympaybill.valueA2 + paympaybill.valueA3 + paympaybill.valueA4 + paympaybill.valueA5 + paympaybill.valueA6 + paympaybill.valueA7 + paympaybill.valueA8 + paympaybill.valueA9 + paympaybill.valueA10 : 'No Name Available'} </Typography>
+                <Typography style={{ fontSize: '18px' }}>PF: {paympaybill ? roundUpValue((paympaybill.actBasic) * (paympaybill.epf / 100)) : 'No Name Available'}</Typography>
+                <Typography style={{ fontSize: '18px' }}>ESI: {paympaybill ? roundUpValue((paympaybill.grossSalary) * (paympaybill.valueA1 / 100)) : 'No Name Available'}</Typography>
+                <Typography style={{ fontSize: '18px' }}>Other Deductions: {paympaybill ? roundUpValue(paympaybill.valueA2  + paympaybill.valueA3 + paympaybill.valueA4 + paympaybill.valueA5 + paympaybill.valueA6 + paympaybill.valueA7 + paympaybill.valueA8 + paympaybill.valueA9 + paympaybill.valueA10) : 'No Name Available'}</Typography>
+               <Typography style={{ marginTop: '50px', fontSize: '18px' }}>Total Deductions: {paympaybill ? roundUpValue((paympaybill.actBasic) * (paympaybill.epf / 100) + (paympaybill.grossSalary) * (paympaybill.valueA1 / 100) + paympaybill.valueA2 + paympaybill.valueA3 + paympaybill.valueA4 + paympaybill.valueA5 + paympaybill.valueA6 + paympaybill.valueA7 + paympaybill.valueA8 + paympaybill.valueA9 + paympaybill.valueA10) : 'No Name Available'} </Typography>
                 
               </TableCell>
             </TableRow>
@@ -220,8 +224,8 @@ const employeewtable = employeework.find(emp => emp.pnEmployeeId == empId)
           </TableBody>
           <TableHead>
             <TableRow style={{ border: '3px solid black'}} >
-              <TableCell style={{ fontSize: '18px' }} >GrossPay: {paympaybill ? paympaybill.grossSalary : 'No Name Available'} </TableCell>
-              <TableCell style={{ fontSize: '18px' }}>Netpay: {totalsalary[0].MonthlySalary}</TableCell>
+              <TableCell style={{ fontSize: '18px' }} >GrossPay: ₹ {paympaybill ? roundUpValue(paympaybill.grossSalary) : 'No Name Available'} </TableCell>
+              <TableCell style={{ fontSize: '18px' }}>Netpay: ₹ {totalsalary[0].MonthlySalary}</TableCell>
               
             </TableRow>
           </TableHead>
@@ -229,7 +233,7 @@ const employeewtable = employeework.find(emp => emp.pnEmployeeId == empId)
       </TableContainer>
       <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center" marginTop={'20px'}>
   <Grid item xs={4} container direction="column" alignItems="left">
-    <Typography align='left' style={{ fontSize: '18px' }}>Pay Date : 11/03/2010</Typography>
+    <Typography align='left' style={{ fontSize: '18px' }}>Pay Date : {today}</Typography>
   </Grid>
   <Grid item xs={4} container direction="column" alignItems="center">
     <Typography align='left' style={{ fontSize: '18px' }}>Employer Signature</Typography>
